@@ -13,7 +13,7 @@ const app = new App({
   receiver: awsLambdaReceiver,
 });
 // ======================================
-// メッセージ受け取り → ファイル取得 →　テキスト要約
+// メッセージ受け取り → ファイル取得 →　テキスト要約（Google Apps Scriptでの実行）
 
 app.message(async ({ message, client, payload }) => {
   console.log("message")
