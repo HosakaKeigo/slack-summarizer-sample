@@ -1,6 +1,6 @@
 # Slack Meeting Summary Bot
 
-```
+```mermaid
 graph TB
   A["Slack Server"] -- "send events" --> B["Amazon API Gateway"]
   B -- "routing" --> C["AWS Lambda"]
