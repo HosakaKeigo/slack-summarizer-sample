@@ -1,12 +1,16 @@
 import * as dotenv from 'dotenv'
-import { App } from "@slack/bolt"
+import { App, AwsLambdaReceiver } from "@slack/bolt"
 import { postGAS } from './postGAS';
+
+const awsLambdaReceiver = new AwsLambdaReceiver({
+  signingSecret: process.env.SLACK_SIGNING_SECRET!,
+});
 
 dotenv.config()
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  receiver: awsLambdaReceiver,
 });
 // ======================================
 // メッセージ受け取り → ファイル取得 →　テキスト要約
@@ -20,9 +24,8 @@ app.message(async ({ message, client, payload }) => {
       return;
     }
 
+    postGAS({ content: fileInfo.content, channel: message.channel, thread_ts: payload.event_ts }).then(res => console.log(res))
     await client.chat.postMessage({ text: `要約中です...完了したらお知らせします。字数：${fileInfo.content.length}`, channel: message.channel, thread_ts: payload.event_ts })
-    postGAS({ content: fileInfo.content, channel: message.channel, thread_ts: payload.event_ts })
-      .then(res => console.log(res))
     return
   }
 });
@@ -55,9 +58,7 @@ app.message(async ({ message, client, payload }) => {
 //  return;
 //});
 
-(async () => {
-  // Start your app
-  await app.start(process.env.PORT || 3000);
-
-  console.log("⚡️ Bolt app is running!");
-})();
+export const handler = async (event, context, callback) => {
+  const handler = await awsLambdaReceiver.start();
+  return handler(event, context, callback);
+}
