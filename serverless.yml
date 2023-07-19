@@ -1,4 +1,4 @@
-service: serverless-bolt-js
+service: slack-meeting-summary-bot
 frameworkVersion: '3'
 provider:
   name: aws
