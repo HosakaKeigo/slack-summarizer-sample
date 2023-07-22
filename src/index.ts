@@ -16,8 +16,15 @@ const app = new App({
 // ======================================
 // メッセージ受け取り → ファイル取得 →　テキスト要約（Google Apps Scriptでの実行）
 
-app.message(async ({ message, client, payload }) => {
+app.message(async ({ message, client, context, payload }) => {
   console.log("message")
+  if (context.retryNum) {
+    console.log(
+      `skipped retry. retryReason: ${context.retryReason}`
+    );
+    return;
+  }
+
   if (message.subtype === "file_share" && message.files) {
     const fileInfo = await client.files.info({ file: message.files[0].id })
     if (!fileInfo.content) {
