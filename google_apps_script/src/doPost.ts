@@ -1,31 +1,54 @@
-interface PostData {
-  content: string;
-  channel: string;
-  thread_ts: string
-}
+/**
+ * Slack botからのリクエストを処理
+ * 1. GPTで受け取った文字起こしテキストを要約
+ * 2. Googleドキュメントに保存
+ * 3. 要約／原文／GoogleドキュメントのURLをSlackに送信
+ */
 function doPost(e: GoogleAppsScript.Events.DoPost) {
   const data = e.postData.contents;
-  const json = JSON.parse(data);
+  const json = JSON.parse(data) as SlackPostData;
 
-  // 要約
   const { content, channel, thread_ts } = json;
+  if (!content || !channel || !thread_ts) {
+    throw new Error("invalid request")
+  }
 
   // シート記録
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet()
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("log") ?? SpreadsheetApp.getActiveSpreadsheet().insertSheet("log")
   sheet.appendRow([new Date(), content, channel, thread_ts])
 
+  // 要約
   const chunks = chunkText(content, CHUNK_SIZE);
-  let summary
+  const summary: Summary = {
+    title: "",
+    body: ""
+  }
 
   // 文字数が多い場合は分割して要約する
   for (const chunk of chunks) {
-    let input = chunk
-    if (summary) {
-      input = "[previous summary]" + summary + "\n---\n" + chunk
-
+    let current = chunk
+    if (summary.body !== "") {
+      current = "[previous summary]" + summary.body + "\n---\n" + chunk
     }
-    summary = summarize(input);
+    try {
+      const result = summarize(current);
+      summary.title = result.title
+      summary.body = result.body
+    } catch (e) {
+      throw new Error(`要約エラー：${e.message}`)
+    }
   }
+
+  // Google Document作成
+  try {
+    const fileId = createDocument(summary);
+    grantAccess(fileId);
+  } catch (e) {
+    throw new Error(`Google Document作成${e.message}`)
+  }
+
+  summary.body += "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${fileId}/edit?usp=sharing`
+
   // Slack送信
-  sendSlack({ text: summary, channel, thread_ts })
+  sendSlack({ text: summary.body, channel, thread_ts })
 }
