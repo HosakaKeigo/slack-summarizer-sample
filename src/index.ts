@@ -11,6 +11,7 @@ dotenv.config()
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   receiver: awsLambdaReceiver,
+  processBeforeResponse: true
 });
 // ======================================
 // メッセージ受け取り → ファイル取得 →　テキスト要約（Google Apps Scriptでの実行）
