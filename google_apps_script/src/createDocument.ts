@@ -20,9 +20,7 @@ function grantAccess(file: GoogleAppsScript.Drive.File) {
 }
 
 function moveDocument(file: GoogleAppsScript.Drive.File) {
-  const date = new Date();
-  const folderPath = `${DIRECTORY_NAME}/${date.getFullYear()}/${date.getMonth() + 1}`
-  const destinationFolder = createNestedFolder(folderPath);
+  const destinationFolder = createNestedFolder(DIRECTORY_PATH);
   file.moveTo(destinationFolder);
 }
 

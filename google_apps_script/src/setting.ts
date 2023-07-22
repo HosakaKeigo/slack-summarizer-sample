@@ -6,7 +6,7 @@ const FILE_PERMISSION = DriveApp.Access.DOMAIN_WITH_LINK
 const FILE_PERMISSION_TYPE = DriveApp.Permission.VIEW
 
 // 議事録保管場所のフォルダ名
-const DIRECTORY_NAME = "議事録"
+const DIRECTORY_PATH = `議事録/${new Date().getFullYear()}/${new Date().getMonth() + 1}月`
 
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 // Function calling用関数スキーマ
