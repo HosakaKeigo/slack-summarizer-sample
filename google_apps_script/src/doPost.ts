@@ -45,7 +45,7 @@ function doPost(e: GoogleAppsScript.Events.DoPost) {
 
   // Google Document作成
   try {
-    const fileId = createDocument(summary);
+    const fileId = createDocument(summary, content);
     grantAccess(fileId);
     summary.body += "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${fileId}/edit?usp=sharing`
   } catch (e) {
