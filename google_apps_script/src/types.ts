@@ -1,5 +1,5 @@
 type API_RESPONSE = {
-  status: number;
+  status: number | string;
   data: API_SUCCESS | API_ERROR;
 }
 
@@ -12,7 +12,7 @@ type API_ERROR = {
 }
 
 type ErrorData = {
-  code: number;
+  code: number | string;
   message: string;
   details: string;
 }
@@ -60,6 +60,11 @@ type SlackPostData = {
   content: string;
   channel: string;
   thread_ts: string
+}
+
+type SlackResponse = {
+  "ok": boolean,
+  "error": string
 }
 
 type Summary = {

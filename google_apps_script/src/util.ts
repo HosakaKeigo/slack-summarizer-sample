@@ -1,7 +1,7 @@
 /**
  * APIレスポンスのフォーマット
  */
-function createJsonResponse(data: any, status: number = 200): GoogleAppsScript.Content.TextOutput {
+function createJsonResponse(data: any, status: number | string = 200): GoogleAppsScript.Content.TextOutput {
   const response: API_RESPONSE = {
     status,
     data

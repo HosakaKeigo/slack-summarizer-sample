@@ -12,7 +12,7 @@ const SLACK_URL = "https://slack.com/api/chat.postMessage"
 const ERROR_MAIL_CONFIG = {
   recipient: "hosaka@piano.or.jp",
   subject: "エラー通知(議事録要約bot)",
-  body: "エラーが発生しました・"
+  body: "エラーが発生しました。"
 }
 
 const CHUNK_SIZE = 14000; // 16kを想定

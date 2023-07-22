@@ -55,10 +55,12 @@ function handleError(error: API_Error | Error, request: SlackPostData): GoogleAp
   console.error(error);
 
   if (error instanceof API_Error) {
+    console.warn("handling API_Error");
     sendAppropriateNotification(error, request);
     return createJsonResponse({ error: error.data }, error.data.code);
   }
 
+  console.warn("handling general Error");
   const internalError = {
     code: 500,
     message: error.message || "Unknown Error",
@@ -74,9 +76,13 @@ function handleError(error: API_Error | Error, request: SlackPostData): GoogleAp
  */
 function sendAppropriateNotification(error: API_Error, request: SlackPostData): void {
   if (error.data === ErrorMap.SLACK_SEND_MESSAGE_ERROR || error.data === ErrorMap.INVALID_REQUEST_ARG) {
-    errorNotificationMail(error.formatErrorMessage());
-  } else {
+    return errorNotificationMail(error.formatErrorMessage());
+  }
+
+  try {
     errorNotificationSlack(error.formatErrorMessage(), request);
+  } catch (e) {
+    errorNotificationMail(error.formatErrorMessage());
   }
 }
 
@@ -88,5 +94,5 @@ function errorNotificationMail(errorMessage: string) {
 
 function errorNotificationSlack(errorMessage: string, request: SlackPostData) {
   const { channel, thread_ts } = request
-  postSlackMessage({ text: errorMessage, channel, thread_ts })
+  postSlackMessage({ text: "下記のエラーが発生しました。\n\n" + errorMessage, channel, thread_ts })
 }

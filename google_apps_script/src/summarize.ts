@@ -38,20 +38,16 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
       functions: GPT_FUNCTION,
       function_call: { name: GPT_FUNCTION[0].name }
     }),
+    muteHttpExceptions: true,
   };
 
-  try {
-    const response = JSON.parse(
-      UrlFetchApp.fetch(OPENAI_URL, options).getContentText()
-    ) as ChatCompletionResponse | OpenAIError;
-    if ("error" in response) {
-      const error = response.error
-      throw new API_Error({ code: Number(error.code), message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
-    }
-    return response
-  } catch (e) {
-    if (e instanceof Error) {
-      throw new Error(e.message);
-    }
+  const response = JSON.parse(
+    UrlFetchApp.fetch(OPENAI_URL, options).getContentText()
+  ) as ChatCompletionResponse | OpenAIError;
+  console.log(`OpenAI Response: ${JSON.stringify(response)}`)
+  if ("error" in response) {
+    const error = response.error
+    throw new API_Error({ code: error.code, message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
   }
+  return response
 }
