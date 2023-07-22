@@ -2,25 +2,26 @@
  * GPTでの要約
  * Function Callingで指定した形式のJSONを返す。
  */
-function summarize(content: string, model = DEFAULT_MODEL): { title: string, body: string } {
+function summarize(content: string, model = DEFAULT_MODEL): Summary {
+  console.time("summarize start: " + content)
   const messages: ChatCompletionMessge[] = [
     { role: "system", content: CHAT_GPT_SYSTEM_PROMPT },
     { role: "user", content: content },
   ];
 
   try {
-    const response = execChatCompletion(messages, model);
-
+    const response = execChatCompletion(messages, model)
     const function_call = response.choices[0].message.function_call
     if (!function_call) {
       throw new Error("function_call not found")
     }
 
     const resultJSON = JSON.parse(function_call.arguments) as { title: string, body: string }
+    console.log(JSON.stringify(resultJSON))
     if (!("title" in resultJSON && "body" in resultJSON)) {
-      throw new Error("Function Call: property not found")
+      throw new Error("Function Call: property not found");
     }
-
+    console.timeEnd("summarize start: " + content)
     return resultJSON
   }
   catch (e) {

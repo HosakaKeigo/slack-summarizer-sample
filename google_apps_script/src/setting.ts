@@ -9,21 +9,21 @@ const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 // Function calling用関数スキーマ
 const GPT_FUNCTION = [
   {
-    "name": "createSummarizedDocument",
+    "name": "createGoogleDocument",
     "description": "useful when create a summarized document",
     "parameters": {
       "type": "object",
       "properties": {
         "title": {
           "type": "string",
-          "description": "A title for a summary document"
+          "description": "A title of document"
         },
         "body": {
           "type": "string",
-          "description": "A body for a summary document"
+          "description": "A body of document"
         }
       },
-      "required": ["title", "summary"]
+      "required": ["title", "body"]
     }
   }]
 
