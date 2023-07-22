@@ -1,3 +1,19 @@
+/**
+ * スクリプトプロパティの取得・エラー処理用
+ */
+function getScriptProperty(key: keyof typeof ScriptPropertyKeysMap): string {
+  const mappedKey = ScriptPropertyKeysMap[key];
+  const value = ScriptProperties.getProperty(mappedKey);
+  if (!value) {
+    const error = ErrorMap.MISSING_SCRIPT_PROPERTIES
+    error.details = `key: ${key}`
+    throw new API_Error(error);
+  }
+
+  return value;
+}
+
+
 function chunkText(text: string, maxLength: number = CHUNK_SIZE): string[] {
   if (text.length <= maxLength) {
     return [text];

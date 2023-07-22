@@ -7,13 +7,18 @@ class API_Error extends Error {
   }
 }
 
-type ErrorType = "INVALID_REQUEST_ARG" | "SLACK_SEND_MESSAGE_ERROR" | "OPENAI_FUNCTION_CALL_ERROR" | "OPENAI_FUNCTION_CALL_ARGUMENT_ERROR" | "GOOGLE_DOCUMENT_CREATE_ERROR";
+type ErrorType = "INVALID_REQUEST_ARG" | "MISSING_SCRIPT_PROPERTIES" | "SLACK_SEND_MESSAGE_ERROR" | "OPENAI_FUNCTION_CALL_ERROR" | "OPENAI_FUNCTION_CALL_ARGUMENT_ERROR" | "GOOGLE_DOCUMENT_CREATE_ERROR";
 
 const ErrorMap: Record<ErrorType, ErrorData> = {
   INVALID_REQUEST_ARG: {
     code: 400,
     message: "Bad Request",
     details: "Request argument is invalid.",
+  },
+  MISSING_SCRIPT_PROPERTIES: {
+    code: 400,
+    message: "Bad Request",
+    details: "Missing script property.",
   },
   SLACK_SEND_MESSAGE_ERROR: {
     code: 401,

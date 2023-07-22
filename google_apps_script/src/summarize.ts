@@ -26,7 +26,7 @@ function summarize(content: string, model = DEFAULT_MODEL): Summary {
 
 function execChatCompletion(messages: ChatCompletionMessge[], model: string): ChatCompletionResponse {
   const headers = {
-    Authorization: "Bearer " + PropertiesService.getScriptProperties().getProperty("OPENAI_API_KEY"),
+    Authorization: "Bearer " + getScriptProperty("OPENAI_API_KEY"),
     "Content-type": "application/json",
   };
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
@@ -46,7 +46,7 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
     ) as ChatCompletionResponse | OpenAIError;
     if ("error" in response) {
       const error = response.error
-      throw new API_Error({ code: error.code, message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
+      throw new API_Error({ code: Number(error.code), message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
     }
     return response
   } catch (e) {

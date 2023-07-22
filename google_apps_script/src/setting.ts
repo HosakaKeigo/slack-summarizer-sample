@@ -1,3 +1,11 @@
+/**
+ * 必要なスクリプトプロパティ名
+ */
+const ScriptPropertyKeysMap = {
+  SLACK_TOKEN: "SLACK_BOT_TOKEN",
+  OPENAI_API_KEY: "OPENAI_API_KEY"
+}
+
 const CHUNK_SIZE = 14000; // 16kを想定
 const DEFAULT_MODEL = "gpt-3.5-turbo-16k-0613"
 
