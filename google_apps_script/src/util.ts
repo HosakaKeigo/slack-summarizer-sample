@@ -13,7 +13,6 @@ function getScriptProperty(key: keyof typeof ScriptPropertyKeysMap): string {
   return value;
 }
 
-
 function chunkText(text: string, maxLength: number = CHUNK_SIZE): string[] {
   if (text.length <= maxLength) {
     return [text];

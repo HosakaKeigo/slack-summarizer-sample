@@ -10,20 +10,15 @@ function createDocument(summary: Summary, original: string) {
   const fileId = doc.getId()
   const docFile = DriveApp.getFileById(fileId)
   moveDocument(docFile)
-  grantAccess(docFile)
+  docFile.setSharing(FILE_PERMISSION, FILE_PERMISSION_TYPE);
 
   return fileId
-}
-
-function grantAccess(file: GoogleAppsScript.Drive.File) {
-  file.setSharing(FILE_PERMISSION, FILE_PERMISSION_TYPE);
 }
 
 function moveDocument(file: GoogleAppsScript.Drive.File) {
   const destinationFolder = createNestedFolder(DIRECTORY_PATH);
   file.moveTo(destinationFolder);
 }
-
 
 function createNestedFolder(path: string): GoogleAppsScript.Drive.Folder {
   const folders = path.split('/');
