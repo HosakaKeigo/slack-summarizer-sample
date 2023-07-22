@@ -16,8 +16,8 @@ const ErrorMap: Record<ErrorType, ErrorData> = {
     details: "Request argument is invalid.",
   },
   MISSING_SCRIPT_PROPERTIES: {
-    code: 400,
-    message: "Bad Request",
+    code: 500,
+    message: "Internal Server Error",
     details: "Missing script property.",
   },
   SLACK_SEND_MESSAGE_ERROR: {
