@@ -4,7 +4,6 @@
 function createDocument(summary: Summary) {
   const doc = DocumentApp.create(summary.title);
   doc.getBody().setText(summary.body);
-  const fileId = doc.getId();
   return doc.getId()
 }
 

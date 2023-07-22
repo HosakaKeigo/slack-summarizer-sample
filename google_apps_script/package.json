@@ -2,7 +2,7 @@
   "name": "google_apps_script_for_summarization",
   "version": "1.0.0",
   "description": "",
-  "main": "コード.js",
+  "main": "doPost.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
