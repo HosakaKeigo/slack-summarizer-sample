@@ -9,26 +9,19 @@ function summarize(content: string, model = DEFAULT_MODEL): Summary {
     { role: "user", content: content },
   ];
 
-  try {
-    const response = execChatCompletion(messages, model)
-    const function_call = response.choices[0].message.function_call
-    if (!function_call) {
-      throw new Error("function_call not found")
-    }
+  const response = execChatCompletion(messages, model)
+  const function_call = response.choices[0].message.function_call
+  if (!function_call) {
+    throw new API_Error(ErrorMap.OPENAI_FUNCTION_CALL_ERROR)
+  }
 
-    const resultJSON = JSON.parse(function_call.arguments) as { title: string, body: string }
-    console.log(JSON.stringify(resultJSON))
-    if (!("title" in resultJSON && "body" in resultJSON)) {
-      throw new Error("Function Call: property not found");
-    }
-    console.timeEnd("summarize start: " + content)
-    return resultJSON
+  const resultJSON = JSON.parse(function_call.arguments) as { title: string, body: string }
+  console.log(JSON.stringify(resultJSON))
+  if (!("title" in resultJSON && "body" in resultJSON)) {
+    throw new API_Error(ErrorMap.OPENAI_FUNCTION_CALL_ARGUMENT_ERROR)
   }
-  catch (e) {
-    if (e instanceof Error) {
-      throw new Error(e.message);
-    }
-  }
+  console.timeEnd("summarize start: " + content)
+  return resultJSON
 }
 
 function execChatCompletion(messages: ChatCompletionMessge[], model: string): ChatCompletionResponse {
@@ -52,7 +45,8 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
       UrlFetchApp.fetch(OPENAI_URL, options).getContentText()
     ) as ChatCompletionResponse | OpenAIError;
     if ("error" in response) {
-      throw new Error(`${response.error.code}: ${response.error.message}`);
+      const error = response.error
+      throw new API_Error({ code: error.code, message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
     }
     return response
   } catch (e) {

@@ -5,18 +5,16 @@ type API_RESPONSE = {
 
 type API_SUCCESS = {
   summary: Summary;
-  model: string;
-  usage: {
-    total_tokens: number;
-  }
 }
 
 type API_ERROR = {
-  error: {
-    code: number | string;
-    message: string;
-    details: string;
-  }
+  error: ErrorData
+}
+
+type ErrorData = {
+  code: number;
+  message: string;
+  details: string;
 }
 
 type ChatCompletionResponse = {

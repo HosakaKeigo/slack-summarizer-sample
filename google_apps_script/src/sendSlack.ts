@@ -10,6 +10,11 @@ function postSlackMessage({ text, channel, thread_ts }: { text: string, channel:
     "method": "post",
     "payload": payload
   };
-
-  UrlFetchApp.fetch(SLACK_URL, options);
+  try {
+    UrlFetchApp.fetch(SLACK_URL, options);
+  } catch (e) {
+    const error = ErrorMap.SLACK_SEND_MESSAGE_ERROR
+    error.details += e.message;
+    throw new API_Error(error)
+  }
 }
