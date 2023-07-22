@@ -6,6 +6,15 @@ const ScriptPropertyKeysMap = {
   OPENAI_API_KEY: "OPENAI_API_KEY"
 }
 
+const SLACK_URL = "https://slack.com/api/chat.postMessage"
+
+// エラー通知メールアドレス（Slackエラーの場合）
+const ERROR_MAIL_CONFIG = {
+  recipient: "hosaka@piano.or.jp",
+  subject: "エラー通知(議事録要約bot)",
+  body: "エラーが発生しました・"
+}
+
 const CHUNK_SIZE = 14000; // 16kを想定
 const DEFAULT_MODEL = "gpt-3.5-turbo-16k-0613"
 
@@ -37,5 +46,3 @@ const GPT_FUNCTION = [
       "required": ["title", "body"]
     }
   }]
-
-const SLACK_URL = "https://slack.com/api/chat.postMessage"

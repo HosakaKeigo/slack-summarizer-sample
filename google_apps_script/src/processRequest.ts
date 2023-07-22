@@ -1,11 +1,5 @@
-function processRequest(e: GoogleAppsScript.Events.DoPost): API_SUCCESS {
-  const data = e.postData.contents;
-  const json = JSON.parse(data) as SlackPostData;
-
-  const { content, channel, thread_ts } = json;
-  if (!content || !channel || !thread_ts) {
-    throw new API_Error(ErrorMap.INVALID_REQUEST_ARG);
-  }
+function processRequest(data: SlackPostData): API_SUCCESS {
+  const { content, channel, thread_ts } = data
 
   // シート記録
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("log") ?? SpreadsheetApp.getActiveSpreadsheet().insertSheet("log")
@@ -48,4 +42,15 @@ function processRequest(e: GoogleAppsScript.Events.DoPost): API_SUCCESS {
   console.log("success: " + JSON.stringify(result))
 
   return result
+}
+
+function parseRequest(e: GoogleAppsScript.Events.DoPost): SlackPostData {
+  const data = e.postData.contents;
+  const json = JSON.parse(data) as SlackPostData;
+
+  const { content, channel, thread_ts } = json;
+  if (!content || !channel || !thread_ts) {
+    throw new API_Error(ErrorMap.INVALID_REQUEST_ARG);
+  }
+  return json
 }

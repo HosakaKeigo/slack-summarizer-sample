@@ -1,4 +1,16 @@
 /**
+ * APIレスポンスのフォーマット
+ */
+function createJsonResponse(data: any, status: number = 200): GoogleAppsScript.Content.TextOutput {
+  const response: API_RESPONSE = {
+    status,
+    data
+  };
+  return ContentService.createTextOutput(JSON.stringify(response))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
  * スクリプトプロパティの取得・エラー処理用
  */
 function getScriptProperty(key: keyof typeof ScriptPropertyKeysMap): string {
