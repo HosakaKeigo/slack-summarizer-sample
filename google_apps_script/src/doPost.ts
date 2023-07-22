@@ -32,7 +32,7 @@ function doPost(e: GoogleAppsScript.Events.DoPost) {
   for (const chunk of chunks) {
     let current = chunk
     if (summary.body !== "") {
-      current = "[previous summary]" + summary.body + "\n---\n" + chunk
+      current = "[previous summary]\n" + summary.body + "\n---\n[additional content]" + chunk
     }
     try {
       const result = summarize(current);
