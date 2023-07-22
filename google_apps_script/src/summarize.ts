@@ -47,7 +47,7 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
   console.log(`OpenAI Response: ${JSON.stringify(response)}`)
   if ("error" in response) {
     const error = response.error
-    throw new API_Error({ code: error.code, message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
+    throw new API_Error({ code: error.code || "500", message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
   }
   return response
 }

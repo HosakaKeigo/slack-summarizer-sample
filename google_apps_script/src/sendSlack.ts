@@ -14,8 +14,8 @@ function postSlackMessage({ text, channel, thread_ts }: { text: string, channel:
   console.log(`postSlackMessage: ${JSON.stringify(options)}`)
   const response = JSON.parse(UrlFetchApp.fetch(SLACK_URL, options).getContentText()) as SlackResponse;
   if (response.error) {
-    const error = ErrorMap.GOOGLE_DOCUMENT_CREATE_ERROR
-    error.message += response.error
+    const error = ErrorMap.SLACK_SEND_MESSAGE_ERROR
+    error.details = error.details + "\n" + response.error
     throw new API_Error(error);
   }
 }

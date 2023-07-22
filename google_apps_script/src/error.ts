@@ -12,7 +12,7 @@ class API_Error extends Error {
     errorMessage.push("[エラーコード]\n" + error.code)
     errorMessage.push("[エラー内容]\n" + error.message)
     errorMessage.push("[詳細]\n" + error.details)
-    return errorMessage.join("\n")
+    return errorMessage.join("\n\n")
   }
 }
 
@@ -37,12 +37,12 @@ const ErrorMap: Record<ErrorType, ErrorData> = {
   OPENAI_FUNCTION_CALL_ERROR: {
     code: 500,
     message: "OpenAI Function call error",
-    details: "function_call property not found in the response from OpenAI API",
+    details: "function_call property not found in the response from OpenAI API.",
   },
   OPENAI_FUNCTION_CALL_ARGUMENT_ERROR: {
     code: 500,
     message: "OpenAI Function call property error",
-    details: "expected property not found in the function_call.arguments",
+    details: "expected property not found in the function_call.arguments.",
   },
   GOOGLE_DOCUMENT_CREATE_ERROR: {
     code: 500,
@@ -82,6 +82,7 @@ function sendAppropriateNotification(error: API_Error, request: SlackPostData): 
   try {
     errorNotificationSlack(error.formatErrorMessage(), request);
   } catch (e) {
+    console.error("Slack通知エラー：" + e.message);
     errorNotificationMail(error.formatErrorMessage());
   }
 }
