@@ -31,11 +31,6 @@ function summarize(content: string, model = DEFAULT_MODEL): { title: string, bod
 }
 
 function execChatCompletion(messages: ChatCompletionMessge[], model: string): ChatCompletionResponse {
-  const OPENAI_BASE_URL = "https://api.openai.com/v1";
-  const OPENAI_ENDPOINTS = new Map<string, string>([
-    ["completion", `${OPENAI_BASE_URL}/chat/completions`],
-  ]);
-
   const headers = {
     Authorization: "Bearer " + PropertiesService.getScriptProperties().getProperty("OPENAI_API_KEY"),
     "Content-type": "application/json",
@@ -53,7 +48,7 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
 
   try {
     const response = JSON.parse(
-      UrlFetchApp.fetch(OPENAI_ENDPOINTS.get("completion"), options).getContentText()
+      UrlFetchApp.fetch(OPENAI_URL, options).getContentText()
     ) as ChatCompletionResponse | OpenAIError;
     if ("error" in response) {
       throw new Error(`${response.error.code}: ${response.error.message}`);

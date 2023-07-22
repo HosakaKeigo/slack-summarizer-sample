@@ -3,6 +3,10 @@
  * 1. GPTで受け取った文字起こしテキストを要約
  * 2. Googleドキュメントに保存
  * 3. 要約／原文／GoogleドキュメントのURLをSlackに送信
+ *
+ * スクリプトプロパティ
+ * SLACK_BOT_TOKEN: Slack: Bot tokens
+ * OPENAI_API_KEY
  */
 function doPost(e: GoogleAppsScript.Events.DoPost) {
   const data = e.postData.contents;
@@ -35,7 +39,7 @@ function doPost(e: GoogleAppsScript.Events.DoPost) {
       summary.title = result.title
       summary.body = result.body
     } catch (e) {
-      throw new Error(`要約エラー：${e.message}`)
+      throw new Error(`要約エラー: ${e.message}`)
     }
   }
 
@@ -43,12 +47,16 @@ function doPost(e: GoogleAppsScript.Events.DoPost) {
   try {
     const fileId = createDocument(summary);
     grantAccess(fileId);
+    summary.body += "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${fileId}/edit?usp=sharing`
   } catch (e) {
-    throw new Error(`Google Document作成${e.message}`)
+    throw new Error(`Google Document作成: ${e.message}`)
   }
 
-  summary.body += "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${fileId}/edit?usp=sharing`
-
   // Slack送信
-  sendSlack({ text: summary.body, channel, thread_ts })
+  try {
+    postSlackMessage({ text: summary.body, channel, thread_ts })
+    console.log("success")
+  } catch (e) {
+    throw new Error(`Slack送信: ${e.message}`)
+  }
 }
