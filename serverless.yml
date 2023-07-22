@@ -15,6 +15,7 @@ package:
 functions:
   slack:
     handler: src/index.handler
+    timeout: 60
     events:
       - http:
           path: slack/events

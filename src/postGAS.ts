@@ -11,11 +11,11 @@ async function postGAS({ content, channel, thread_ts }: {
   content: string;
   channel: string;
   thread_ts: string
-}) {
+}): Promise<API_RESPONSE> {
   if (!process.env.GAS_API_URL) {
     throw new Error("GAS_API_URL is not defined")
   }
-  await fetch(process.env.GAS_API_URL,
+  const response = await fetch(process.env.GAS_API_URL,
     {
       method: "post",
       body: JSON.stringify({
@@ -24,6 +24,7 @@ async function postGAS({ content, channel, thread_ts }: {
         thread_ts
       }),
     })
+  return response.json()
 }
 
 export { postGAS }
