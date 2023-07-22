@@ -1,3 +1,24 @@
+type API_RESPONSE = {
+  status: number;
+  data: API_SUCCESS | API_ERROR;
+}
+
+type API_SUCCESS = {
+  summary: Summary;
+  model: string;
+  usage: {
+    total_tokens: number;
+  }
+}
+
+type API_ERROR = {
+  error: {
+    code: number | string;
+    message: string;
+    details: string;
+  }
+}
+
 type ChatCompletionResponse = {
   id: string;
   object: string;
