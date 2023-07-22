@@ -24,24 +24,8 @@ app.message(async ({ message, client, payload }) => {
       await client.chat.postMessage({ text: "すみません、ファイル情報の取得に失敗しました。", channel: message.channel, thread_ts: payload.event_ts })
       return;
     }
-
+    postGAS({ content: fileInfo.content, channel: message.channel, thread_ts: payload.event_ts })
     await client.chat.postMessage({ text: `要約中です...完了したらお知らせします。字数：${fileInfo.content.length}`, channel: message.channel, thread_ts: payload.event_ts })
-    try {
-      const response = await postGAS({ content: fileInfo.content, channel: message.channel, thread_ts: payload.event_ts })
-      const responseData = response.data
-      if ("error" in responseData) {
-        const error = responseData.error
-        console.error(error)
-        await client.chat.postMessage({ text: `すみません、エラーが発生しました。(${error.code}:${error.message})\nエラー内容: ${error.details}`, channel: message.channel, thread_ts: payload.event_ts })
-      }
-    } catch (e) {
-      console.error(e)
-      if (e instanceof Error) {
-        console.error(e.message)
-        await client.chat.postMessage({ text: "すみません、エラーが発生しました。： " + e.message, channel: message.channel, thread_ts: payload.event_ts })
-      }
-    }
-
     return
   }
 });
