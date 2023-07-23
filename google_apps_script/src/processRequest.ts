@@ -12,32 +12,37 @@ function processRequest(data: SlackPostData): API_SUCCESS {
     body: ""
   }
 
+  const summaries: Summary[] = []
+  let summaryTitle: string
+
   // 文字数が多い場合は分割して要約する
-  for (const chunk of chunks) {
-    let current = chunk
-    if (summary.body !== "") {
-      current = "[previous summary]\n" + summary.body + "\n---\n[additional content]" + chunk
+  chunks.forEach((chunk, index) => {
+    const part = chunks.length > 1 ? `(${index + 1} of ${chunks.length})` : ""
+    const summarized = summarize("[draft of a meeting]\n" + chunk);
+
+    if (index === 0) {
+      summaryTitle = summarized.title // chunkのタイトル名を統一するため、初回のタイトルを採用する
     }
-    const result = summarize(current);
-    summary.title = result.title
-    summary.body = result.body
-  }
+    summary.title = summaryTitle + part
+    summary.body = summarized.body
+    summaries.push(summarized)
 
-  // Google Document作成
-  try {
-    const fileId = createDocument(summary, content);
-    summary.body += "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${fileId}/edit?usp=sharing`
-  } catch (e) {
-    const error = ErrorMap.GOOGLE_DOCUMENT_CREATE_ERROR
-    error.message += e.message
-    throw new API_Error(error)
-  }
+    // Google Document作成
+    try {
+      const fileId = createDocument(summary, content);
+      summary.body += "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${fileId}/edit?usp=sharing`
+    } catch (e) {
+      const error = ErrorMap.GOOGLE_DOCUMENT_CREATE_ERROR
+      error.message += e.message
+      throw new API_Error(error)
+    }
 
-  // Slack送信
-  postSlackMessage({ text: summary.body, channel, thread_ts })
+    // Slack送信
+    postSlackMessage({ text: part + "\n---\n\n" + summary.body, channel, thread_ts })
+  })
 
   const result: API_SUCCESS = {
-    summary
+    summaries: [summary]
   }
   console.log("success: " + JSON.stringify(result))
 

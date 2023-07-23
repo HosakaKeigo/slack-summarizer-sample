@@ -4,7 +4,7 @@ type API_RESPONSE = {
 }
 
 type API_SUCCESS = {
-  summary: Summary;
+  summaries: Summary[];
 }
 
 type API_ERROR = {
