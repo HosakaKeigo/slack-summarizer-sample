@@ -32,6 +32,7 @@ ${!isSequel ? `## 日時
 Please note;
 
 - your summary should be in Japanese.
+- your summary's length should be about the 1/10 of the original minutes draft. For example, if 10,000 words given, your summary should be about 1000 words.
 - minutes draft of a meeting might contain typos and grammatical errors. You should correct them before summarization.
 - use "さん" for people's name. e.g. "山田さん"
 
