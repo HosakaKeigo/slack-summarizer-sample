@@ -35,7 +35,8 @@ function processRequest(data: SlackPostData): API_SUCCESS {
       else {
         appendToDocument(part + "\n\n" + summary.body, googleDocument);
       }
-      if (index === chunk.length - 1) { // 末尾に文字起こし原文を追記する。
+
+      if (index === chunks.length - 1) { // 末尾に文字起こし原文を追記する。
         appendToDocument("【文字起こし原文】\n" + content, googleDocument);
       }
     } catch (e) {

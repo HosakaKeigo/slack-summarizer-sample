@@ -11,6 +11,8 @@ function createDocument(summary: Summary) {
   moveDocument(docFile)
   docFile.setSharing(FILE_PERMISSION, FILE_PERMISSION_TYPE);
 
+  console.log('Document created:' + summary.title)
+
   return doc
 }
 
@@ -35,8 +37,8 @@ function appendToDocument(content: string, doc: GoogleAppsScript.Document.Docume
   const docBody = doc.getBody()
   docBody.appendPageBreak()
   docBody.appendParagraph(content)
+  console.log("Document appended: " + content)
 }
-
 
 function getOrCreateFolder(parent: GoogleAppsScript.Drive.Folder, folderName: string) {
   const folders = parent.getFoldersByName(folderName);
