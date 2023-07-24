@@ -40,7 +40,7 @@ const GPT_FUNCTION = [
         },
         "body": {
           "type": "string",
-          "description": "A body of document"
+          "description": "A summary of document"
         }
       },
       "required": ["title", "body"]

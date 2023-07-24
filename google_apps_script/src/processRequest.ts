@@ -13,32 +13,42 @@ function processRequest(data: SlackPostData): API_SUCCESS {
   }
 
   const summaries: Summary[] = []
-  let summaryTitle: string
+  let googleDocument: GoogleAppsScript.Document.Document
 
   // 文字数が多い場合は分割して要約する
   chunks.forEach((chunk, index) => {
     const part = chunks.length > 1 ? `(${index + 1} of ${chunks.length})` : ""
-    const summarized = summarize("[draft of a meeting]\n" + chunk);
 
-    if (index === 0) {
-      summaryTitle = summarized.title // chunkのタイトル名を統一するため、初回のタイトルを採用する
-    }
-    summary.title = summaryTitle + part
-    summary.body = summarized.body
-    summaries.push(summarized)
+    const isSequel = index !== 0 // 2回目以降の場合は処理を変える。
+    const openaiSummary = summarize("[draft of a meeting]\n" + chunk, isSequel);
+
+    summary.title = openaiSummary.title
+    summary.body = openaiSummary.body
+    summaries.push(openaiSummary)
 
     // Google Document作成
+    // 2回目以降は同じドキュメントに追記する
     try {
-      const fileId = createDocument(summary, content);
-      summary.body += "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${fileId}/edit?usp=sharing`
+      if (!googleDocument) {
+        googleDocument = createDocument(summary);
+      }
+      else {
+        appendToDocument(part + "\n\n" + summary.body, googleDocument);
+      }
+      if (index === chunk.length - 1) { // 末尾に文字起こし原文を追記する。
+        appendToDocument("【文字起こし原文】\n" + content, googleDocument);
+      }
     } catch (e) {
       const error = ErrorMap.GOOGLE_DOCUMENT_CREATE_ERROR
       error.message += e.message
       throw new API_Error(error)
     }
 
+    const googleDocumentUrl = "\n\n[Google Document]\n" + `https://docs.google.com/document/d/${googleDocument.getId()}/edit?usp=sharing`
+    const text = [part, "---", summary.body, googleDocumentUrl].join("\n\n")
+
     // Slack送信
-    postSlackMessage({ text: part + "\n---\n\n" + summary.body, channel, thread_ts })
+    postSlackMessage({ text, channel, thread_ts })
   })
 
   const result: API_SUCCESS = {

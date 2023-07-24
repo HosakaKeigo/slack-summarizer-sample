@@ -1,11 +1,12 @@
 /**
  * GPTでの要約
  * Function Callingで指定した形式のJSONを返す。
+ * @param isSequel 2回目以降の要約かどうか
  */
-function summarize(content: string, model = DEFAULT_MODEL): Summary {
+function summarize(content: string, isSequel: boolean, model = DEFAULT_MODEL): Summary {
   console.time("summarize start: " + content)
   const messages: ChatCompletionMessge[] = [
-    { role: "system", content: CHAT_GPT_SYSTEM_PROMPT },
+    { role: "system", content: CHAT_GPT_SYSTEM_PROMPT(isSequel) },
     { role: "user", content: content },
   ];
 
@@ -15,7 +16,11 @@ function summarize(content: string, model = DEFAULT_MODEL): Summary {
     throw new API_Error(ErrorMap.OPENAI_FUNCTION_CALL_ERROR)
   }
 
-  const resultJSON = JSON.parse(function_call.arguments) as { title: string, body: string }
+  const arguments = escapeChatGPTResponse(function_call.arguments)
+
+  console.log(`function_call.arg: ${arguments}`)
+
+  const resultJSON = JSON.parse(arguments) as { title: string, body: string }
   console.log(JSON.stringify(resultJSON))
   if (!("title" in resultJSON && "body" in resultJSON)) {
     throw new API_Error(ErrorMap.OPENAI_FUNCTION_CALL_ARGUMENT_ERROR)
@@ -50,4 +55,15 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
     throw new API_Error({ code: error.code || "500", message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
   }
   return response
+}
+
+/**
+ * JSONがparseできない内容（\nなど）を含んでいる場合の対策
+ * Bad control character in string literal in JSON対策。
+ */
+function escapeChatGPTResponse(input: string) {
+  // \nを取る。\\nを残す
+  return input.replace(/(\\)?\n/g, (match, p1) => {
+    return p1 ? match : "";
+  });
 }
