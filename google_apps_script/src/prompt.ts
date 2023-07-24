@@ -5,7 +5,7 @@ You will receive minutes draft of a meeting. Your task is to format and summariz
 Your summary should be in the markdown format with the following section.
 
 ---
-## Title
+## タイトル
 <subject of the meeting. Required.>
 
 ## 日時
