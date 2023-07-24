@@ -36,7 +36,8 @@ app.message(async ({ message, client, context, payload }) => {
     }
 
     const file = message.files[0]
-    if (file.mimetype !== "text/plain") {
+    const allowedFileTypes = ["text/plain"]
+    if (!allowedFileTypes.includes(file.mimetype)) {
       await client.chat.postMessage({
         text: ".txtファイルを送信してください。",
         channel: message.channel,
