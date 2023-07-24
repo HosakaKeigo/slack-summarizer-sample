@@ -3,7 +3,6 @@ frameworkVersion: '3'
 provider:
   name: aws
   region: us-west-2
-  memorySize: 256
   runtime: nodejs18.x
   environment:
     SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
