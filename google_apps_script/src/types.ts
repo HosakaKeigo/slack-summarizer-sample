@@ -11,12 +11,6 @@ type API_ERROR = {
   error: ErrorData
 }
 
-type ErrorData = {
-  code: number | string;
-  message: string;
-  details: string;
-}
-
 type ChatCompletionResponse = {
   id: string;
   object: string;
@@ -40,6 +34,12 @@ type ChatCompletionResponse = {
 type ChatCompletionMessge = {
   role: "system" | "user" | "assistant";
   content: string;
+}
+
+type ErrorData = {
+  code: number | string;
+  message: string;
+  details: string;
 }
 
 type FunctionCall = {
