@@ -26,6 +26,14 @@ app.message(async ({ message, client, context, payload }) => {
   }
 
   if (message.subtype === "file_share" && message.files) {
+    if (!process.env.GAS_API_URL) {
+      await client.chat.postMessage({
+        text: "すみません、要約サーバーのURLが設定されていません。",
+        channel: message.channel,
+        thread_ts: payload.event_ts
+      })
+      return
+    }
     if (message.files.length > 1) {
       await client.chat.postMessage({
         text: "ファイルは一つだけ送信してください。",
