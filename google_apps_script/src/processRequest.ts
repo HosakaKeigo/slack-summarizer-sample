@@ -41,7 +41,7 @@ function processRequest(data: SlackPostData): API_SUCCESS {
       }
     } catch (e) {
       const error = ErrorMap.GOOGLE_DOCUMENT_CREATE_ERROR
-      error.message += e.message
+      error.details += e.message
       throw new API_Error(error)
     }
 

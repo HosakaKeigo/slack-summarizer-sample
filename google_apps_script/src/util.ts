@@ -15,7 +15,7 @@ function createJsonResponse(data: any, status: number | string = 200): GoogleApp
  */
 function getScriptProperty(key: keyof typeof ScriptPropertyKeysMap): string {
   const mappedKey = ScriptPropertyKeysMap[key];
-  const value = ScriptProperties.getProperty(mappedKey);
+  const value = PropertiesService.getScriptProperties().getProperty(mappedKey);
   if (!value) {
     const error = ErrorMap.MISSING_SCRIPT_PROPERTIES
     error.details = `key: ${key}`
