@@ -35,7 +35,7 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
     "Content-type": "application/json",
   };
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
-    headers: headers,
+    headers,
     method: "post",
     payload: JSON.stringify({
       model,
@@ -49,7 +49,9 @@ function execChatCompletion(messages: ChatCompletionMessge[], model: string): Ch
   const response = JSON.parse(
     UrlFetchApp.fetch(OPENAI_URL, options).getContentText()
   ) as ChatCompletionResponse | OpenAIError;
+
   console.log(`OpenAI Response: ${JSON.stringify(response)}`)
+
   if ("error" in response) {
     const error = response.error
     throw new API_Error({ code: error.code || "500", message: error.message, details: "For more information, see: https://platform.openai.com/docs/guides/error-codes/api-errors" });
