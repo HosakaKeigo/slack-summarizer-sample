@@ -1,4 +1,4 @@
-const CHAT_GPT_SYSTEM_PROMPT = (isSequel: boolean) => `You're a document summary bot."
+const CHAT_GPT_SYSTEM_PROMPT = (isSequel: boolean) => `You're a document summary bot.
 
 You will receive minutes draft of a meeting. Your task is to format and summarize the meeting.
 
