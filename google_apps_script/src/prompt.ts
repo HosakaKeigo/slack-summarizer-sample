@@ -1,4 +1,4 @@
-const CHAT_GPT_SYSTEM_PROMPT = (isSequel: boolean) => `You're a document bot in "全日本ピアノ指導者協会（ピティナ）"
+const CHAT_GPT_SYSTEM_PROMPT = (isSequel: boolean) => `You're a document summary bot."
 
 You will receive minutes draft of a meeting. Your task is to format and summarize the meeting.
 
