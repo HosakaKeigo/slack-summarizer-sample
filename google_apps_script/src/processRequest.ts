@@ -19,7 +19,7 @@ function processRequest(data: SlackPostData): API_SUCCESS {
   chunks.forEach((chunk, index) => {
     const part = chunks.length > 1 ? `(${index + 1} of ${chunks.length})` : ""
 
-    const isSequel = index !== 0 // 2回目以降の場合は処理を変える。
+    const isSequel = index !== 0 // 2回目以降の場合は、先行する要約を踏まえるように処理を変える。
     const openaiSummary = summarize("[draft of a meeting]\n" + chunk, isSequel);
 
     summary.title = openaiSummary.title
